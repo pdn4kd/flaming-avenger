@@ -1,14 +1,48 @@
-from math import pi, exp, sin, cos, sqrt
-#~ csv = open('flightlog.csv', 'w')
-#~ csv.write("Time,Mass,R,dR,ddR,Theta,dTheta,ddTheta\r\n")
-#~ csv.write("Fuel,Throttle,MaxAlt\r\n")
+# Ascent Simulation 0.3 -- Feb 10, 2015
 
-#Kerbin setup
-radius = 600000.0
-mu = 3531600000000.0 #gravitational parameter
-scale = 5000.0 #atmospheric scale height
-k = 0.0049 #magic. Also slightly wrong.
-rot = 2*pi/21600 #rotation rate in rad/s. Because the 6 h sidereal day is still real.
+from math import pi, exp, sin, cos, sqrt
+
+class Body:
+	#Kerbin by default
+	radius = 600000.0
+	mu = 3531600000000.0 #gravitational parameter
+	scale = 5000.0 #atmospheric scale height
+	rot = 2*pi/21600 #rotation rate in rad/s. Because the 6 h sidereal day is still real.
+	k = 0.004 * 1.2230948554874 #magic number to make drag work based on local pressure. Includes the 0.5 factor in the drag equation. (uses data from the actual API)
+
+class Craft:
+	Thrust = 250
+	MassWet = 0.1+0.8+0.5+0.05+1.125
+	MassDry = MassEmpty + fuel*0.0075
+	Isp1 = 225
+	Isp0 = 240
+	def Isp(Body.pressure):
+		If Body.Pressure(alt) > 0:
+			return Isp0 - (Isp0 - Isp1)*Body.Pressure(alt)
+		else:
+			return Isp0
+#class ascentProfile:
+#Idea: Profile 0: straight up at full throttle. Profile 1: throttle control. Profile 2: pitch control. Profile 3: 1+2. (-1: do nothing)
+
+#class flightLog:
+	def start(logname):
+		csv = open('flightlog.csv', 'w') #we can leave this hanging, right?
+		csv.write("Time,Mass,R,dR,ddR,Theta,dTheta,ddTheta\r\n")
+	def log():
+		csv.write("Fuel,Throttle,MaxAlt\r\n")
+	def stop():
+		csv.close()
+
+class OrbitalParameters:
+	semiMajorAxis
+	eccentricity
+	apoapsis
+	periapsis
+	update(R, Spd):
+		semiMajorAxis = 1/(2/R - Spd*Spd/Body.GM)
+		eccentricity = Math.sqrt(1-R*R*Spd*Spd/(semiMajorAxis*Body.GM))
+		apoapsis = semiMajorAxis*(1+eccentricity)
+		periapsis = semiMajorAxis*(1-eccentricity) 
 
 fuel = 433.0
 Throttle = 1.0
@@ -64,6 +98,9 @@ while (Throttle > 0.0):
 		t += dt
 		if (altmax < altitude):
 			altmax = altitude
+		
+		# Orbital parameters
+		
 		#~ csv.write(str(t) + "," + str(m) + "," + str(r) + "," + str(dr) + "," + str(ddr) + "," + str(theta) + "," + str(dtheta) + "," + str(ddtheta) + "\r\n")
 		#~ print("t:" + str(t) + " m:" +str(m) + " Cd:" +str(Cd))
 		#~ print("r:" + str(r) + " dr:" + str(dr) + " ddr:" + str(ddr))
