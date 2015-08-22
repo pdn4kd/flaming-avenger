@@ -19,9 +19,9 @@ P = 0.9 #11/26 t100s for 1.2, 10/27 t100s for 0.9
 R = 9
 
 # a,b,c Yes, it's a glorified quadratic equation.
-a = -V2*T*T*R*(R-1)
-b = T*(E1+P)*(V1*(R-1)*(R-1)-V2*(R+1)*(R-1))
-c = V1*(R-1)*(E1+P)*(E1+E2+T+P+S)-V2*(R-1)*(E1+P)*(E1+P)
+a = -V2*T*T*R
+b = T*(E1+P)*(V1*(R-1)-V2*(R+1))
+c = V1*(E1+P)*(E1+E2+T+P+S)-V2*(E1+P)*(E1+P)
 
 # x = ...
 print((-b-sqrt(b*b-4*a*c))/(2*a))
