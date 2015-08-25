@@ -1,7 +1,6 @@
 # Finding the amount of propellant to split between 2 stages to maximize dV.
 # TWR limits are *not* considered, nor is Isp changing with stage split time.
 # Analytic in principle, but the algebra is... bleah.
-# May 21, 2015
 
 from math import sqrt
 
@@ -26,3 +25,9 @@ c = V1*(E1+P)*(E1+E2+T+P+S)-V2*(E1+P)*(E1+P)
 # x = ...
 print((-b-sqrt(b*b-4*a*c))/(2*a))
 print((-b+sqrt(b*b-4*a*c))/(2*a))
+
+# alternate formulation to attempt to reduce float errors
+y = (E1+P)*(V1*(R-1)-V2*(R+1))/(2*V2*T*R)
+z = (E1+P)*(V1*(E1+E2+T+P+S)-V2*(E1+P))/(V2*T*T*R)
+print(y-sqrt(y**2+z))
+print(y+sqrt(y**2+z))
